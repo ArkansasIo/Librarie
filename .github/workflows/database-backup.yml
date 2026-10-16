@@ -1,0 +1,25 @@
+name: Database backup
+on:
+  schedule:
+    - cron: '30 2 * * *'
+  workflow_dispatch:
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump MySQL
+        env:
+          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+          MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+        run: |
+          mkdir -p backups
+          export MYSQL_PWD="$MYSQL_PASSWORD"
+          mysqldump --host="$MYSQL_HOST" --port="${MYSQL_PORT:-3306}" --user="$MYSQL_USER" --single-transaction --routines --triggers "$MYSQL_DATABASE" | gzip > "backups/librarie-$(date -u +%Y%m%d-%H%M%S).sql.gz"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: librarie-database-backup
+          path: backups/*.sql.gz
+          retention-days: 14
