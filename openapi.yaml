@@ -1,0 +1,97 @@
+openapi: 3.0.3
+info:
+  title: Librarie API
+  version: 1.1.0
+servers:
+  - url: http://localhost:3000/api
+paths:
+  /health:
+    get:
+      responses:
+        '200': {description: Healthy}
+        '503': {description: Database unavailable}
+  /books:
+    get:
+      parameters:
+        - {name: q, in: query, schema: {type: string}}
+      responses:
+        '200': {description: Book catalog}
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookInput'
+      responses:
+        '201': {description: Created}
+  /members:
+    get:
+      responses: {'200': {description: Members}}
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberInput'
+      responses: {'201': {description: Created}}
+  /inventory:
+    get:
+      responses: {'200': {description: Inventory}}
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryInput'
+      responses: {'201': {description: Created}}
+  /loans:
+    get:
+      responses: {'200': {description: Active loans}}
+  /loans/checkout:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [inventory_id, member_id]
+              properties:
+                inventory_id: {type: integer}
+                member_id: {type: integer}
+                due_days: {type: integer, minimum: 1, maximum: 90, default: 14}
+      responses: {'201': {description: Checked out}}
+  /loans/{id}/return:
+    post:
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: integer}}
+      responses: {'200': {description: Returned}}
+components:
+  schemas:
+    BookInput:
+      type: object
+      required: [title]
+      properties:
+        isbn: {type: string}
+        title: {type: string}
+        description: {type: string}
+        published_year: {type: integer}
+    MemberInput:
+      type: object
+      required: [member_number, first_name, last_name]
+      properties:
+        member_number: {type: string}
+        first_name: {type: string}
+        last_name: {type: string}
+        email: {type: string, format: email}
+        phone: {type: string}
+    InventoryInput:
+      type: object
+      required: [book_id, barcode]
+      properties:
+        book_id: {type: integer}
+        barcode: {type: string}
+        shelf_location: {type: string}
