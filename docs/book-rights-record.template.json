@@ -1,0 +1,20 @@
+{
+  "book_id": "BK-000001",
+  "rights_status": "ORIGINAL_LIBRARIE",
+  "rights_holder": "ArkansasIo / applicable author",
+  "license_name": "",
+  "license_url": "",
+  "permission_source": "",
+  "permission_date": "2026-10-17",
+  "territory": "WORLDWIDE",
+  "allowed_actions": [
+    "CATALOG_METADATA",
+    "BROWSER_READING"
+  ],
+  "restrictions": [],
+  "attribution": "",
+  "reviewed_by": "",
+  "reviewed_at": "",
+  "expiration_date": null,
+  "notes": "Replace this template with a title-specific rights determination before enabling unrestricted digital distribution."
+}
